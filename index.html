@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Recurso de terapia ocupacional: pareamento de sequências de cores.">
+  <meta name="theme-color" content="#FFFFFF">
+  <title>Pareamento de Cores</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 10'%3E%3Ccircle cx='5' cy='5' r='4' fill='%23E53935'/%3E%3Ccircle cx='15' cy='5' r='4' fill='%23FDD835'/%3E%3Ccircle cx='25' cy='5' r='4' fill='%231E63D6'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ===================== CONFIGURAÇÃO ===================== -->
+  <main id="tela-inicio" class="tela" aria-label="Configuração">
+    <h1 class="titulo">Pareamento de Cores</h1>
+
+    <form id="form-inicio" class="painel" novalidate>
+      <div class="campo">
+        <label class="campo__label" for="cores">Cores na sequência</label>
+        <div class="campo__controle">
+          <button type="button" class="passo" data-alvo="cores" data-delta="-1" aria-label="Menos cores">−</button>
+          <input class="campo__input" type="number" id="cores" inputmode="numeric" min="2" max="6" value="3">
+          <button type="button" class="passo" data-alvo="cores" data-delta="1" aria-label="Mais cores">+</button>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label class="campo__label" for="rodadas">Rodadas</label>
+        <div class="campo__controle">
+          <button type="button" class="passo" data-alvo="rodadas" data-delta="-1" aria-label="Menos rodadas">−</button>
+          <input class="campo__input" type="number" id="rodadas" inputmode="numeric" min="1" max="30" value="10">
+          <button type="button" class="passo" data-alvo="rodadas" data-delta="1" aria-label="Mais rodadas">+</button>
+        </div>
+      </div>
+
+      <button type="submit" class="botao-principal">Iniciar</button>
+    </form>
+  </main>
+
+  <!-- ===================== SESSÃO ===================== -->
+  <section id="tela-foco" class="tela tela--foco" aria-label="Sessão em andamento" hidden>
+    <div class="linha" id="modelo" aria-label="Sequência modelo"></div>
+    <div class="linha" id="resposta" aria-label="Espaços para parear"></div>
+    <div class="linha linha--paleta" id="paleta" aria-label="Cores disponíveis"></div>
+
+    <button type="button" class="botao-parar" id="btn-parar" aria-label="Parar sessão e voltar ao início">parar</button>
+  </section>
+
+  <!-- ===================== FIM ===================== -->
+  <section id="tela-fim" class="tela" aria-label="Sessão concluída" hidden>
+    <p class="titulo">Muito bem!</p>
+    <button type="button" class="botao-principal" id="btn-voltar">Voltar</button>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+/* =========================================================
+   Pareamento de Cores
+   Fundo branco, sem decoração: as cores são o único destaque.
+   ========================================================= */
+
+:root {
+  --fundo:   #FFFFFF;
+  --tinta:   #2B2B2B;
+  --cinza:   #6B6B6B;
+  --linha:   #D6D6D6;
+  --acao:    #2F4F7F;  /* botões da configuração (tela do terapeuta) */
+  --raio:    16px;
+  --foco-ring: 0 0 0 4px rgba(47, 79, 127, 0.4);
+
+  /* tamanho de cada bolinha: cabe 6 por linha e 3 linhas em qualquer tela */
+  --tam: min(13vw, 17vh, 120px);
+  --gap: min(2.5vw, 24px);
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; min-height: 100%; }
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  color: var(--tinta);
+  background: var(--fundo);
+  -webkit-text-size-adjust: 100%;
+}
+
+.tela {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 5vw, 48px);
+  gap: clamp(24px, 5vh, 48px);
+}
+
+.tela[hidden] { display: none; }
+
+.titulo {
+  margin: 0;
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  font-weight: 800;
+  text-align: center;
+}
+
+/* =============================== CONFIGURAÇÃO =============================== */
+
+.painel {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 4vh, 32px);
+}
+
+.campo { display: flex; flex-direction: column; gap: 10px; text-align: center; }
+
+.campo__label { font-size: clamp(1.15rem, 3.4vw, 1.4rem); font-weight: 700; }
+
+.campo__controle { display: flex; align-items: stretch; justify-content: center; gap: 12px; }
+
+.passo {
+  width: 64px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--acao);
+  background: var(--fundo);
+  border: 2px solid var(--linha);
+  border-radius: 14px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.passo:active { transform: scale(0.94); }
+
+.campo__input {
+  width: 120px;
+  text-align: center;
+  font-size: clamp(2.2rem, 8vw, 3rem);
+  font-weight: 800;
+  color: var(--tinta);
+  background: var(--fundo);
+  border: 2px solid var(--linha);
+  border-radius: 14px;
+  padding: 4px;
+  -moz-appearance: textfield;
+}
+.campo__input::-webkit-outer-spin-button,
+.campo__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+.botao-principal {
+  width: 100%;
+  max-width: 480px;
+  padding: clamp(16px, 4vw, 22px);
+  font-size: clamp(1.3rem, 4.5vw, 1.8rem);
+  font-weight: 800;
+  color: #fff;
+  background: var(--acao);
+  border: none;
+  border-radius: var(--raio);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.botao-principal:active { transform: scale(0.98); }
+
+/* =============================== SESSÃO =============================== */
+
+.tela--foco {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--fundo);
+  gap: var(--gap);
+  /* evita rolagem/zoom do navegador durante o arrasto */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.linha { display: flex; justify-content: center; gap: var(--gap); }
+
+/* separa a paleta das linhas de pareamento */
+.linha--paleta { margin-top: calc(var(--gap) * 3); }
+
+.bola {
+  width: var(--tam);
+  height: var(--tam);
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.12); /* deixa o amarelo visível no branco */
+  flex: 0 0 auto;
+}
+
+.espaco {
+  background: transparent;
+  border: 3px dashed var(--linha);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.espaco.preenchido { border: 2px solid rgba(0, 0, 0, 0.12); }
+
+/* rodada completa: realce suave antes da próxima */
+.linha.completa .espaco { box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.06); }
+
+.paleta-cor {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* cor errada: balanço curto, sem outro aviso */
+.balanca { animation: balanca 0.35s ease; }
+@keyframes balanca {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-8px); }
+  75%      { transform: translateX(8px); }
+}
+
+/* bolinha que segue o dedo durante o arrasto */
+.fantasma {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+/* Botão de parar: pequeno e discreto, no canto (mesmo padrão do Feliciterapia) */
+.botao-parar {
+  position: fixed;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  right: max(14px, env(safe-area-inset-right));
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #9a9a9a;
+  background: transparent;
+  border: 1.5px solid #dcdcdc;
+  border-radius: 10px;
+  cursor: pointer;
+  opacity: 0.5;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.15s ease;
+}
+.botao-parar:hover,
+.botao-parar:focus-visible { opacity: 1; color: var(--tinta); }
+
+/* =============================== ACESSIBILIDADE =============================== */
+
+:focus-visible { outline: none; box-shadow: var(--foco-ring); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
