@@ -6,15 +6,24 @@ HTML, CSS e JavaScript puro. Sem build, sem dependências.
 
 ## Como funciona
 
-1. Na configuração, escolha **cores na sequência** (padrão 3, de 2 a 6) e **rodadas** (padrão 10, de 1 a 30) e toque em **Iniciar**.
-2. Em cada rodada aparecem, em linhas horizontais:
-   - a **sequência modelo** (cores sorteadas, sem repetir);
-   - os **espaços vazios** logo abaixo, para parear;
-   - a **paleta** com todas as 6 cores, sempre na mesma ordem.
+1. Na configuração, escolha:
+   - **Cores na sequência** (padrão 3, de 2 a 6);
+   - **Rodadas** (padrão 10, de 1 a 30);
+   - **Segundos para memorizar** (padrão 5, de 0 a 30).
+2. Em cada rodada aparecem, em linhas horizontais: a **sequência modelo** (cores sorteadas, sem repetir), os **espaços vazios** e, abaixo de uma divisória suave, a **paleta** com as 6 cores, sempre na mesma ordem.
 3. O paciente pode **tocar** uma cor (ela vai para o próximo espaço, da esquerda para a direita) ou **arrastar** a cor até o espaço.
-4. **Aprendizagem sem erro:** cor errada não entra no espaço — a cor só dá um leve balanço.
-5. Completou a linha → pequena pausa → próxima rodada. Ao fim das rodadas aparece "Muito bem!".
-6. O botão discreto **parar** no canto (ou a tecla **Esc**) encerra a sessão.
+4. O botão discreto **parar** no canto (ou a tecla **Esc**) encerra a sessão. Ao fim das rodadas aparece "Muito bem!".
+
+### Com memorização (segundos > 0)
+
+1. Só a sequência aparece, pelo tempo escolhido.
+2. A sequência **sobe e some**; surgem os espaços e a paleta.
+3. O paciente preenche de memória (qualquer cor é aceita).
+4. Ao completar, a sequência **desce de volta** e cada espaço recebe ✓ (acertou) ou ✗ (errou). Após 2,5 s começa a próxima rodada.
+
+### Sem memorização (0 s)
+
+A sequência fica sempre visível e vale a **aprendizagem sem erro**: cor errada não entra no espaço, só balança de leve.
 
 ## Celular
 

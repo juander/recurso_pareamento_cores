@@ -34,6 +34,16 @@
         </div>
       </div>
 
+      <div class="campo">
+        <label class="campo__label" for="memorizar">Segundos para memorizar</label>
+        <div class="campo__controle">
+          <button type="button" class="passo" data-alvo="memorizar" data-delta="-1" aria-label="Menos segundos">−</button>
+          <input class="campo__input" type="number" id="memorizar" inputmode="numeric" min="0" max="30" value="5" aria-describedby="ajuda-memorizar">
+          <button type="button" class="passo" data-alvo="memorizar" data-delta="1" aria-label="Mais segundos">+</button>
+        </div>
+        <p class="campo__ajuda" id="ajuda-memorizar">0 = sequência sempre visível</p>
+      </div>
+
       <button type="submit" class="botao-principal">Iniciar</button>
     </form>
   </main>

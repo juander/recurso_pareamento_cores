@@ -87,6 +87,8 @@ body {
   padding: 4px;
   -moz-appearance: textfield;
 }
+.campo__ajuda { margin: 0; font-size: 0.95rem; color: var(--cinza); }
+
 .campo__input::-webkit-outer-spin-button,
 .campo__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
@@ -184,6 +186,39 @@ body {
 
 /* rodada completa: realce suave antes da próxima */
 .linha.completa .espaco { box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.06); }
+
+/* ----- Memorização ----- */
+
+#modelo, #resposta, #paleta { transition: opacity 0.4s ease, transform 0.6s ease; }
+
+/* durante a memorização só a sequência aparece */
+.memorizando #resposta,
+.memorizando #paleta { opacity: 0; pointer-events: none; }
+
+/* tempo acabou: a sequência sobe e some (o espaço fica reservado) */
+.lembrando #modelo { opacity: 0; transform: translateY(-60%); }
+
+/* feedback: ✓ ou ✗ num selo branco no canto de cada espaço */
+.espaco { position: relative; }
+.espaco.certo::after,
+.espaco.errado::after {
+  position: absolute;
+  right: -8%;
+  bottom: -8%;
+  width: 42%;
+  height: 42%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--linha);
+  font-size: calc(var(--tam) * 0.26);
+  font-weight: 900;
+  line-height: 1;
+}
+.espaco.certo::after  { content: "✓"; color: #2E7D32; }
+.espaco.errado::after { content: "✗"; color: #C62828; }
 
 .paleta-cor {
   cursor: pointer;

@@ -2,9 +2,14 @@
    Pareamento de Cores
    Cada rodada: sequência modelo sorteada (sem repetir cor),
    espaços vazios embaixo e a paleta fixa com todas as cores.
-   Aprendizagem sem erro: cor errada não entra, só balança.
    Funciona tocando (preenche o próximo espaço) ou arrastando
    (solta sobre o espaço desejado).
+
+   Memorização (segundos > 0): só a sequência aparece; ao fim do
+   tempo ela sobe e some, o paciente preenche de memória e, ao
+   completar, a sequência desce de volta com ✓/✗ em cada espaço.
+   Sem memorização (0 s): sequência sempre visível e aprendizagem
+   sem erro (cor errada não entra, só balança).
    ========================================================= */
 
 (function () {
@@ -20,6 +25,7 @@
     { nome: "roxo",     hex: "#8E44AD" }
   ];
   var PAUSA_ENTRE_RODADAS_MS = 1200;
+  var PAUSA_FEEDBACK_MS = 2500; // tempo olhando o ✓/✗ antes da próxima rodada
   var LIMIAR_ARRASTO_PX = 10;
 
   var telaInicio = document.getElementById("tela-inicio");
@@ -30,9 +36,9 @@
   var resposta   = document.getElementById("resposta");
   var paleta     = document.getElementById("paleta");
 
-  var nCores, totalRodadas, rodada;
+  var nCores, totalRodadas, rodada, memorizarMs;
   var ativo = false;
-  var travado = false; // durante a pausa entre rodadas
+  var travado = false; // durante a memorização e as pausas
   var timerId = null;
 
   /* ---------- Campos numéricos (−/+ com limites) ---------- */
@@ -88,6 +94,7 @@
 
   function novaRodada() {
     travado = false;
+    telaFoco.classList.remove("lembrando"); // sequência volta a descer
     resposta.classList.remove("completa");
     modelo.innerHTML = "";
     resposta.innerHTML = "";
@@ -98,6 +105,16 @@
       espaco.setAttribute("aria-label", "espaço vazio");
       resposta.appendChild(espaco);
     });
+
+    if (memorizarMs > 0) {
+      travado = true;
+      telaFoco.classList.add("memorizando"); // só a sequência na tela
+      timerId = setTimeout(function () {
+        telaFoco.classList.remove("memorizando");
+        telaFoco.classList.add("lembrando"); // sequência sobe e some
+        travado = false;
+      }, memorizarMs);
+    }
   }
 
   /* ---------- Regra do pareamento ---------- */
@@ -111,22 +128,33 @@
   function tentarPreencher(espaco, corEl) {
     if (!ativo || travado) return;
     var i = +corEl.dataset.cor;
-    if (!espaco || espaco.classList.contains("preenchido") || +espaco.dataset.alvo !== i) {
+    var errado = espaco && memorizarMs === 0 && +espaco.dataset.alvo !== i; // só barra no modo sem erro
+    if (!espaco || espaco.classList.contains("preenchido") || errado) {
       balancar(corEl);
       return;
     }
     espaco.classList.add("preenchido");
+    espaco.dataset.cor = i;
     espaco.style.backgroundColor = CORES[i].hex;
     espaco.setAttribute("aria-label", CORES[i].nome);
 
     if (!resposta.querySelector(".espaco:not(.preenchido)")) {
       travado = true;
-      resposta.classList.add("completa");
+      var pausa = PAUSA_ENTRE_RODADAS_MS;
+      if (memorizarMs > 0) {
+        telaFoco.classList.remove("lembrando"); // sequência desce para comparar
+        resposta.querySelectorAll(".espaco").forEach(function (e) {
+          e.classList.add(e.dataset.cor === e.dataset.alvo ? "certo" : "errado");
+        });
+        pausa = PAUSA_FEEDBACK_MS;
+      } else {
+        resposta.classList.add("completa");
+      }
       timerId = setTimeout(function () {
         rodada++;
         if (rodada > totalRodadas) terminar();
         else novaRodada();
-      }, PAUSA_ENTRE_RODADAS_MS);
+      }, pausa);
     }
   }
 
@@ -140,7 +168,7 @@
 
   paleta.addEventListener("pointerdown", function (e) {
     var corEl = e.target.closest(".paleta-cor");
-    if (!corEl || gesto) return;
+    if (!corEl || gesto || travado) return;
     e.preventDefault();
     gesto = { id: e.pointerId, corEl: corEl, x0: e.clientX, y0: e.clientY, fantasma: null };
   });
@@ -192,6 +220,7 @@
   function iniciar() {
     nCores = lerCampo(document.getElementById("cores"));
     totalRodadas = lerCampo(document.getElementById("rodadas"));
+    memorizarMs = lerCampo(document.getElementById("memorizar")) * 1000;
     rodada = 1;
     ativo = true;
     telaFoco.style.setProperty("--n", nCores); // o CSS ajusta o tamanho das bolinhas
@@ -206,6 +235,7 @@
     timerId = null;
     if (gesto && gesto.fantasma) gesto.fantasma.remove();
     gesto = null;
+    telaFoco.classList.remove("memorizando", "lembrando");
   }
 
   function terminar() {
