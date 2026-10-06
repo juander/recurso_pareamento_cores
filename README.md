@@ -16,7 +16,7 @@ HTML, CSS e JavaScript puro. Sem build, sem dependências.
 
 ### Com memorização (segundos > 0)
 
-1. Só a sequência aparece, pelo tempo escolhido.
+1. Só a sequência aparece, com um **contador regressivo** em cinza logo acima, pelo tempo escolhido.
 2. A sequência **sobe e some**; surgem os espaços e a paleta.
 3. O paciente preenche de memória (qualquer cor é aceita).
 4. Ao completar, a sequência **desce de volta** e cada espaço recebe ✓ (acertou) ou ✗ (errou). Após 2,5 s começa a próxima rodada.

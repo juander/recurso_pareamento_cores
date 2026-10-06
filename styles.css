@@ -126,7 +126,7 @@ body {
   --por-linha: max(var(--n, 3), var(--cols));
   --tam: min(
     (100vw - 2 * var(--pad-x) - (var(--por-linha) - 1) * var(--gap)) / var(--por-linha),
-    (var(--alt) - 2 * var(--pad-y) - (var(--linhas) + 3) * var(--gap)) / var(--linhas),
+    (var(--alt) - 2 * var(--pad-y) - (var(--linhas) + 3 + 2 * var(--cont, 0)) * var(--gap)) / (var(--linhas) + var(--cont, 0)),
     130px
   );
 
@@ -190,6 +190,23 @@ body {
 /* ----- Memorização ----- */
 
 #modelo, #resposta, #paleta { transition: opacity 0.4s ease, transform 0.6s ease; }
+
+/* contador da memorização: ocupa meia bolinha de altura acima da sequência */
+.contador {
+  height: calc(var(--tam) * 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--tam) * 0.45);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--cinza);
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.contador[hidden] { display: none; }
+.memorizando .contador { opacity: 1; }
 
 /* durante a memorização só a sequência aparece */
 .memorizando #resposta,

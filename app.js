@@ -35,8 +35,9 @@
   var modelo     = document.getElementById("modelo");
   var resposta   = document.getElementById("resposta");
   var paleta     = document.getElementById("paleta");
+  var contador   = document.getElementById("contador");
 
-  var nCores, totalRodadas, rodada, memorizarMs;
+  var nCores, totalRodadas, rodada, memorizarSeg;
   var ativo = false;
   var travado = false; // durante a memorização e as pausas
   var timerId = null;
@@ -106,15 +107,23 @@
       resposta.appendChild(espaco);
     });
 
-    if (memorizarMs > 0) {
+    if (memorizarSeg > 0) {
       travado = true;
-      telaFoco.classList.add("memorizando"); // só a sequência na tela
-      timerId = setTimeout(function () {
-        telaFoco.classList.remove("memorizando");
-        telaFoco.classList.add("lembrando"); // sequência sobe e some
-        travado = false;
-      }, memorizarMs);
+      telaFoco.classList.add("memorizando"); // só o contador e a sequência na tela
+      contarMemorizacao(memorizarSeg);
     }
+  }
+
+  // contador regressivo acima da sequência; no fim ela sobe e some
+  function contarMemorizacao(seg) {
+    if (seg === 0) {
+      telaFoco.classList.remove("memorizando");
+      telaFoco.classList.add("lembrando");
+      travado = false;
+      return;
+    }
+    contador.textContent = seg;
+    timerId = setTimeout(function () { contarMemorizacao(seg - 1); }, 1000);
   }
 
   /* ---------- Regra do pareamento ---------- */
@@ -128,7 +137,7 @@
   function tentarPreencher(espaco, corEl) {
     if (!ativo || travado) return;
     var i = +corEl.dataset.cor;
-    var errado = espaco && memorizarMs === 0 && +espaco.dataset.alvo !== i; // só barra no modo sem erro
+    var errado = espaco && memorizarSeg === 0 && +espaco.dataset.alvo !== i; // só barra no modo sem erro
     if (!espaco || espaco.classList.contains("preenchido") || errado) {
       balancar(corEl);
       return;
@@ -141,7 +150,7 @@
     if (!resposta.querySelector(".espaco:not(.preenchido)")) {
       travado = true;
       var pausa = PAUSA_ENTRE_RODADAS_MS;
-      if (memorizarMs > 0) {
+      if (memorizarSeg > 0) {
         telaFoco.classList.remove("lembrando"); // sequência desce para comparar
         resposta.querySelectorAll(".espaco").forEach(function (e) {
           e.classList.add(e.dataset.cor === e.dataset.alvo ? "certo" : "errado");
@@ -220,7 +229,9 @@
   function iniciar() {
     nCores = lerCampo(document.getElementById("cores"));
     totalRodadas = lerCampo(document.getElementById("rodadas"));
-    memorizarMs = lerCampo(document.getElementById("memorizar")) * 1000;
+    memorizarSeg = lerCampo(document.getElementById("memorizar"));
+    contador.hidden = memorizarSeg === 0;
+    telaFoco.style.setProperty("--cont", memorizarSeg > 0 ? 0.5 : 0); // reserva a altura do contador
     rodada = 1;
     ativo = true;
     telaFoco.style.setProperty("--n", nCores); // o CSS ajusta o tamanho das bolinhas
