@@ -151,7 +151,7 @@
       if (Math.hypot(e.clientX - gesto.x0, e.clientY - gesto.y0) < LIMIAR_ARRASTO_PX) return;
       gesto.fantasma = gesto.corEl.cloneNode(false);
       gesto.fantasma.className = "bola fantasma";
-      document.body.appendChild(gesto.fantasma);
+      telaFoco.appendChild(gesto.fantasma); // herda o tamanho calculado na tela
     }
     var r = gesto.fantasma.offsetWidth / 2;
     gesto.fantasma.style.transform =
@@ -194,6 +194,7 @@
     totalRodadas = lerCampo(document.getElementById("rodadas"));
     rodada = 1;
     ativo = true;
+    telaFoco.style.setProperty("--n", nCores); // o CSS ajusta o tamanho das bolinhas
     montarPaleta();
     novaRodada();
     mostrar(telaFoco);

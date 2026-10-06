@@ -16,6 +16,12 @@ HTML, CSS e JavaScript puro. Sem build, sem dependências.
 5. Completou a linha → pequena pausa → próxima rodada. Ao fim das rodadas aparece "Muito bem!".
 6. O botão discreto **parar** no canto (ou a tecla **Esc**) encerra a sessão.
 
+## Celular
+
+Feito para funcionar bem no celular: as bolinhas usam o maior tamanho que cabe na tela.
+- **Em pé:** a paleta fica em 2 linhas de 3 cores. Com 2–4 cores na sequência as bolinhas ficam grandes (~100 px).
+- **Deitado:** recomendado para 5–6 cores, porque as 6 cabem em linha com folga (~100 px).
+
 ## Como usar
 
 Abra `index.html` em qualquer navegador moderno, ou publique a pasta como site estático (ex.: Vercel, sem configuração).
