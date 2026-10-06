@@ -163,7 +163,7 @@ body {
   grid-template-columns: repeat(var(--cols), var(--tam));
   margin-top: calc(var(--gap) * 1.5);
   padding-top: calc(var(--gap) * 1.5);
-  border-top: 1px solid #EDEDED; /* divisória suave */
+  border-top: 2px solid #DDDDDD; /* divisória suave */
 }
 
 .bola {
